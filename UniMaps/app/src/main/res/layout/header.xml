@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/uni"
+        android:scaleType="centerCrop" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_image"
+        android:layout_width="120px"
+        android:layout_height="120px"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cosmos"
+        app:border_color="@android:color/white"
+        app:border_width="1dp" />
+
+    <TextView
+        android:id="@+id/Usuario0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/usuario"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:textColor="@color/colorNegro"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/Correo0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="Correo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:textColor="@color/colorBlanco"
+        android:textStyle="bold"/>
+
+</FrameLayout>

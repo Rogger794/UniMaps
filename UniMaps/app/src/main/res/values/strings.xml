@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">ProyectoMoviles</string>
+    <string name="login">Login</string>
+    <string name="Home">Home</string>
+    <string name="Lugares">Lugares</string>
+    <string name="Historial">Historial</string>
+    <string name="Ayuda">Ayuda</string>
+    <string name="Cerrar">Cerrar Sesión</string>
+    <string name="seccion1">Login</string>
+    <string name="usuario">Usuario</string>
+    <string name="registro">Registro</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="lugar">Lugares</string>
+    <string name="take_picture">Take picture</string>
+    <string name="correo">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="nombres">Nombres</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="rep_password">Repetir Contraseña</string>
+    <string name="validar_correo">Correo no valido</string>
+    <string name="validar_password">Contraseña muy corta</string>
+    <string name="lat">Latitud</string>
+    <string name="lon">Longitud</string>
+    <string name="no_location">Localización no encontrada</string>
+    <string name="cam">Camara</string>
+    <string name="map">Mapa</string>
+    <string name="CTIC">CTIC</string>
+    <string name="DESCTIC">El Centro de Tecnologías de Información y Comunicaciones de la Universidad Nacional de Ingeniería (CTIC-UNI)</string>
+    <string name="CISMID">CISMID</string>
+    <string name="DESCISMID">Centro Peruano Japones de investigaciones sismica y mitigacion de desastres</string>
+    <string name="INICTEL">INICTEL</string>
+    <string name="DESINICTEL">INSTITUTO NACIONAL DE INVESTIGACION Y CAPACITACION DE TELECOMUNICACIONES DE LA UNIVERSIDAD NACIONAL DE INGENIERIA</string>
+    <string name="IMCA">IMCA</string>
+    <string name="DESIMCA">Instituto de Matemática y Ciencias Afines</string>
+
+    <string name="open_drawer">Abierto</string>
+    <string name="close_drawer">Cerrado</string>
+
+    <string-array name="opcionmap">\
+        <item> Normal</item>
+        <item> Satelite</item>
+        <item> Terrain</item>
+    </string-array>
+
+    <string-array name="opcionsex">\
+        <item>Hombre</item>
+        <item>Mujer</item>
+    </string-array>
+
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="section_format">Hola seccion: %1$d</string>
+    <string name="action_settings">Configuraciones</string>
+    <string name="title_activity_pestanas">Lugares</string>
+    <string name="oficinas">Oficinas</string>
+    <string name="facultades">Facultades</string>
+    <string name="centros_Inv">Centros Inv.</string>
+
+    <string name="pref_app_key">preferencias</string>
+    <string name="name_key">nameKey</string>
+    <string name="lastname_key">lastnameKey</string>
+    <string name="correo_key">correoKey</string>
+    <string name="pass_key">passKey</string>
+
+</resources>

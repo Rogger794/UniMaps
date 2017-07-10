@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.moviles.proyectomoviles.AdminSQLite;
-import com.example.moviles.proyectomoviles.Objetos.Dependencia;
-import com.example.moviles.proyectomoviles.Objetos.Empleado;
-import com.example.moviles.proyectomoviles.Objetos.FirebaseReferences;
-import com.example.moviles.proyectomoviles.Objetos.Oficina;
-import com.example.moviles.proyectomoviles.Objetos.Sede;
 import com.example.moviles.proyectomoviles.PassValidator;
 import com.example.moviles.proyectomoviles.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,14 +36,11 @@ public class Register extends Fragment implements
     private Button logIn;
 
 
-    private EditText sexo;
-    private EditText email;
-    private EditText dni;
-    //private EditText passLogup;
+    private EditText correoLogup;
+    private EditText passLogup;
     private EditText nameLogup;
-    private EditText oficina;
+    private EditText repassLogup;
     private EditText lastnameLogup;
-    private EditText telefono;
     private AdminSQLite db;
     private View vista;
 
@@ -95,22 +81,21 @@ public class Register extends Fragment implements
         // Inflate the layout for this fragment
         vista= inflater.inflate(R.layout.register, container, false);
 
+        correoLogup =(EditText)vista.findViewById(R.id.correoLogup);
+        passLogup =(EditText)vista.findViewById(R.id.passLogup);
         nameLogup =(EditText)vista.findViewById(R.id.nameLogup);
         lastnameLogup =(EditText)vista.findViewById(R.id.lastnameLogup);
-        sexo =(EditText)vista.findViewById(R.id.sexo);
-        email =(EditText)vista.findViewById(R.id.correo);
-        dni =(EditText)vista.findViewById(R.id.dni);
-        oficina =(EditText)vista.findViewById(R.id.oficina);
-        telefono =(EditText)vista.findViewById(R.id.telefono);
+        repassLogup =(EditText)vista.findViewById(R.id.repassLogup);
 
-        /*passLogup.addTextChangedListener(new PassValidator(passLogup) {
+
+        passLogup.addTextChangedListener(new PassValidator(passLogup) {
             @Override
             public void validate(EditText editText, String text) {
                 //Implementamos la validación que queramos
                 if( text.length() < 8 )
                     passLogup.setError( "La contraseña es muy corta" );
             }
-        });*/
+        });
 
 //        repassLogup.addTextChangedListener(new PassValidator(repassLogup) {
 //            @Override
@@ -121,15 +106,15 @@ public class Register extends Fragment implements
 //            }
 //        });
 
-        /*sexo.addTextChangedListener(new PassValidator(sexo) {
+        correoLogup.addTextChangedListener(new PassValidator(correoLogup) {
             @Override
             public void validate(EditText editText, String text) {
                 //Implementamos la validación que queramos
 
                 if(!isCorreoValid())
-                    sexo.setError( "No es correo valido" );
+                    correoLogup.setError( "No es correo valido" );
             }
-        });*/
+        });
 
         logUp = (Button)vista.findViewById(R.id.logup);
         logUp.setOnClickListener(this);
@@ -156,15 +141,14 @@ public class Register extends Fragment implements
     @Override
     public void onClick(View v) {
 
-        /*String nombre =nameLogup.getText().toString();
+        String nombre =nameLogup.getText().toString();
         String lastname =lastnameLogup.getText().toString();
-        String sexos= sexo.getText().toString();
-        String correo
+        String correo =correoLogup.getText().toString();
         String password =passLogup.getText().toString();
-        String oficinas =oficina.getText().toString();
-        //boolean confPass =password.equals(repassword);
-        //boolean tamPass = password.length()<8;
-*/
+        String repassword =repassLogup.getText().toString();
+        boolean confPass =password.equals(repassword);
+        boolean tamPass = password.length()<8;
+
         if (vista != null) {
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(vista.getWindowToken(), 0);
@@ -181,6 +165,7 @@ public class Register extends Fragment implements
 
             default:
                 break;
+
         }
 
     }
@@ -188,67 +173,22 @@ public class Register extends Fragment implements
 
     public void registrarUsuario(){
         //Intent intencion;
-        oficina =(EditText)vista.findViewById(R.id.oficina);
-        telefono =(EditText)vista.findViewById(R.id.telefono);
+        String name = nameLogup.getText().toString();
+        String lastname = lastnameLogup.getText().toString();
+        String email = correoLogup.getText().toString();
+        String password =passLogup.getText().toString();
+        String repassword =repassLogup.getText().toString();
 
-        String nombres = nameLogup.getText().toString();
-        String apellidos = lastnameLogup.getText().toString();
-        String sexos = sexo.getText().toString();
-        String correo = email.getText().toString();
-        int ddni=Integer.parseInt(dni.getText().toString());
-        String oficinas=oficina.getText().toString();
-        int fono=Integer.parseInt(telefono.getText().toString());
+        boolean confPass =password.equals(repassword);
+        boolean tamPass = password.length()<8;
 
-
-        //String Oficina
-        //String password =passLogup.getText().toString();
-        //String repassword =repassLogup.getText().toString();
-
-
-        //boolean confPass =password.equals(repassword);
-        //boolean tamPass = password.length()<8;
-
-        if(!nombres.isEmpty()&& !correo.isEmpty() && !apellidos.isEmpty() && !oficinas.isEmpty() && !sexos.isEmpty() && isCorreoValid()){
-            //db.addUser(nombres,apellidos,email,password);
+        if(!name.isEmpty()&& !email.isEmpty() && !lastname.isEmpty() && !password.isEmpty() && !repassword.isEmpty() && confPass && !tamPass && isCorreoValid()){
+            db.addUser(name,lastname,email,password);
+            Toast.makeText(getActivity().getApplicationContext(),"Usuario Registrado",Toast.LENGTH_SHORT).show();
+            CambiaFragment(Login.class);
             //intencion= new Intent(getActivity().getApplicationContext(),MainActivity.class);
             //startActivity(intencion );
             //finish();
-
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-            /*ValueEventListener valuelistener=new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Dependencia dependencia=dataSnapshot.getValue(Dependencia.class);
-                    Log.i("DATOS",dataSnapshot.toString());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("ERROR",databaseError.getMessage());
-                }
-            };*/
-            DatabaseReference myRef=database.getReference(FirebaseReferences.SEDE_REFERENCE);
-            Sede sede=new Sede((int)(System.currentTimeMillis()), "Uni", 20, "Rimac, Lima 25, Peru, Av. Tupac Amaru 210");
-            myRef=myRef.child(FirebaseReferences.SEDE_REFERENCE);
-            myRef.push().setValue(sede);
-
-            Dependencia dependencia=new Dependencia((int)(System.currentTimeMillis()),"Ciencias", (int)(System.currentTimeMillis()),12, sede.getIdSede());
-            myRef=myRef.child(FirebaseReferences.DEPENDENCIA_REFERENCE);
-            myRef.push().setValue(dependencia);
-
-            Oficina oficina=new Oficina((int)(System.currentTimeMillis()), sede.getIdSede(), dependencia.getIdDependencia(), 8, "Estadistica");
-            myRef=myRef.child(FirebaseReferences.OFICINA_REFERENCE);
-            myRef.push().setValue(oficina);
-
-            Empleado empleado=new Empleado((int)(System.currentTimeMillis()), (int)(System.currentTimeMillis()), oficina.getIdOficina(), ddni, nombres, apellidos, sexos, fono, correo);
-            myRef=myRef.child(FirebaseReferences.EMPLEADO_REFERENCE);
-            myRef.push().setValue(empleado);
-
-            Toast.makeText(getActivity().getApplicationContext(),"Usuario Registrado",Toast.LENGTH_SHORT).show();
-            CambiaFragment(Login.class);
-
-
         }else{
             Toast.makeText(getActivity().getApplicationContext(),"Complete los datos",Toast.LENGTH_SHORT).show();
         }
@@ -262,7 +202,7 @@ public class Register extends Fragment implements
         Matcher matcher;
         String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
         pattern = Pattern.compile(EMAIL_PATTERN);
-        matcher = pattern.matcher(sexo.getText().toString());
+        matcher = pattern.matcher(correoLogup.getText().toString());
         return matcher.matches();
 
     }
