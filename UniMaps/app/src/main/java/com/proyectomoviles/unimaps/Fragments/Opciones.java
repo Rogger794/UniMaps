@@ -131,18 +131,6 @@ public class Opciones extends Fragment implements
         transaction.replace(R.id.flContent, fragment).addToBackStack(null);
         transaction.commit();
     }
-    private void CambiaFragment3(Class C){
-        Fragment fragment=null;
-        Class fragmentClass=C;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.flContent, fragment).addToBackStack(null);
-        transaction.commit();
-    }
 
     @Override
     public void onDetach() {

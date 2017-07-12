@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.proyectomoviles.unimaps.Fragments.Camara;
 import com.proyectomoviles.unimaps.Fragments.Login;
 import com.proyectomoviles.unimaps.Fragments.Mapa;
 import com.proyectomoviles.unimaps.Fragments.Navigation;
@@ -39,16 +40,12 @@ import com.proyectomoviles.unimaps.Objetos.FirebaseReferences;
 import com.proyectomoviles.unimaps.Objetos.Usuario;
 
 
-
-/*
-import com.example.moviles.proyectomoviles.Fragments.Mapa;
-import com.example.moviles.proyectomoviles.Fragments.Camara;*/
-
 public class MainActivity extends AppCompatActivity implements
         Login.OnFragmentInteractionListener,
         Register.OnFragmentInteractionListener,
         Navigation.OnFragmentInteractionListener,
         Configuraciones.OnFragmentInteractionListener,
+        Camara.OnFragmentInteractionListener,
         Mapa.OnFragmentInteractionListener,
         Pestanas.OnFragmentInteractionListener,
         Opciones.OnFragmentInteractionListener {
@@ -57,14 +54,20 @@ public class MainActivity extends AppCompatActivity implements
     private Sesion sesion;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String[] datos=new String[3];
+    private Bundle mbundle;
+
+    public String[] getDatos() {
+        return datos;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sesion = new Sesion(getApplicationContext());
-        myRef=FirebaseDatabase.getInstance().getReference(FirebaseReferences.BD_REFERENCE).child(FirebaseReferences.USUARIO_REFERENCE);;
+        myRef=FirebaseDatabase.getInstance().getReference(FirebaseReferences.BD_REFERENCE).child(FirebaseReferences.USUARIO_REFERENCE);
 
+        mbundle = new Bundle();
         if (savedInstanceState == null) {
             mAuthListener=new FirebaseAuth.AuthStateListener(){
                 @Override
@@ -76,15 +79,19 @@ public class MainActivity extends AppCompatActivity implements
                         fragmentClass = Login.class;
                     }
                     else{
-                        DatabaseReference usuario = myRef.child(user.getUid());
+                        //DatabaseReference usuario = myRef.child(user.getUid());
 
-                        DatabaseReference name = usuario.child("nombres");
-                        DatabaseReference lastname = usuario.child("apellidos");
+                        DatabaseReference name = myRef.child(user.getUid()).child("nombres");
+                        DatabaseReference lastname = myRef.child(user.getUid()).child("apellidos");
 
                         name.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                datos[0] = dataSnapshot.getValue(String.class);
+                                //datos[0] = dataSnapshot.getValue(String.class);
+                                //String myMessage = "Stackoverflow is cool!";
+                                //mbundle.putString("name", dataSnapshot.getValue(String.class) );
+                                sesion.setName(dataSnapshot.getValue(String.class));
+
 
                                 //profileName.setText(username);
                             }
@@ -98,7 +105,10 @@ public class MainActivity extends AppCompatActivity implements
                         lastname.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                datos[1] = dataSnapshot.getValue(String.class);
+                                //datos[1] = dataSnapshot.getValue(String.class);
+                                //mbundle.putString("lastname", dataSnapshot.getValue(String.class) );
+                                sesion.setLastName(dataSnapshot.getValue(String.class));
+
                                 //TextView profileName = (TextView) v.findViewById(R.id.profileName);
                                 //profileName.setText(username);
                             }
@@ -108,13 +118,15 @@ public class MainActivity extends AppCompatActivity implements
                             }
                         });
 
-                        datos[2]=user.getEmail();
+                        sesion.setEmail(user.getEmail());
+                        //mbundle.putString("email",user.getEmail() );
+                        //datos[2]=user.getEmail();
                         // Attach a listener to read the data at our posts reference
 
-                        Toast.makeText(getApplicationContext(),datos[0]+" "+datos[1]+" "+datos[2],Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),datos[0]+" "+datos[1]+" "+datos[2],Toast.LENGTH_SHORT).show();
 
                         //if(db.getUserLogin(correo,password)){
-                        sesion.setUserValues(datos[0],datos[1],datos[2]);
+                        //sesion.setUserValues(datos[0],datos[1],datos[2]);
                         //datostmp = sesion.getUserValues();
 
                         fragmentClass = Navigation.class;

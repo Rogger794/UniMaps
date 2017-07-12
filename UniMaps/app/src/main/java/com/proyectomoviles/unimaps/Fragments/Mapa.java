@@ -21,6 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.proyectomoviles.unimaps.R;
 //import com.example.moviles.proyectomoviles.*;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,7 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickListener, AdapterView.OnItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int MY_PERMISSION_FINE_LOCATION = 101;
-    private static  final int MY_PERMISSION_COARSE_LOCATION=192;
+    private static final int MY_PERMISSION_COARSE_LOCATION=192;
     private GoogleMap mMap;
     private Spinner cmbOpt;
     protected GoogleApiClient mGoogleApiClient;
@@ -60,11 +62,35 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private LocationRequest mLocationRequest;
+    //private LocationListener mlocListener;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
+    LocationListener locationListenerGPS=new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            double latitude=location.getLatitude();
+            double longitude=location.getLongitude();
+            //String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
+
+            if (location != null) {
+                mLatitudeText.setText("Latitud: " + String.valueOf(latitude));
+                mLongitudeText.setText("Longitud: " + String.valueOf(longitude));
+            } else {
+                mLatitudeText.setText("Latitud: (desconocida)");
+                mLongitudeText.setText("Longitud: (desconocida)");
+            }
+
+            //Toast.makeText(getActivity().getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+        }
+    };
+
 
     public Mapa() {
         // Required empty public constructor
@@ -84,6 +110,10 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buildGoogleApiClient();
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -107,7 +137,6 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
         mLatitudeText = (TextView) vista.findViewById((R.id.Latitud));
         mLongitudeText = (TextView) vista.findViewById((R.id.Longitud));
 
-        buildGoogleApiClient();
         return vista;
     }
 
@@ -145,6 +174,8 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
+                    //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,locationListenerGPS);
+
                     Toast.makeText(getActivity().getApplicationContext(), "Permisos Habilitados", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Se necesita permisos de ubicacion", Toast.LENGTH_SHORT).show();
@@ -167,9 +198,6 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        /*Intent intencion;
-        intencion = new Intent(getActivity().getApplicationContext(), com.example.moviles.proyectomoviles.Instituciones.class);
-        startActivity(intencion);*/
     }
 
     @Override
@@ -195,6 +223,7 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
+                .enableAutoManage(getActivity(), this)
                 .build();
     }
 
@@ -215,14 +244,55 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Revisar_Permisos();
+        //Revisar_Permisos();
         mLatitudeLabel = getResources().getString(R.string.lat);
         mLongitudeLabel = getResources().getString(R.string.lon);
-        if (mLastLocation != null) {
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_FINE_LOCATION);
+        } else {
+
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListenerGPS);
+
+            //change the time of location updates
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(10000)
+                    .setFastestInterval(5000);
+
+            //restart location updates with the new interval
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, locationListenerGPS);
+
+            //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            //Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            //updateUI(mLastLocation);
+        }
+
+
+
+        /*if (mLastLocation != null) {
             mLatitudeText.setText( mLatitudeLabel+"  "+mLastLocation.getLatitude());
             mLongitudeText.setText(mLongitudeLabel+"  "+mLastLocation.getLongitude());
         } else {
             Toast.makeText(getActivity().getApplicationContext(), R.string.no_location, Toast.LENGTH_LONG).show();
+        }*/
+    }
+
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            mLatitudeText.setText("Latitud: " + String.valueOf(loc.getLatitude()));
+            mLongitudeText.setText("Longitud: " + String.valueOf(loc.getLongitude()));
+        } else {
+            mLatitudeText.setText("Latitud: (desconocida)");
+            mLongitudeText.setText("Longitud: (desconocida)");
         }
     }
 
@@ -234,10 +304,41 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
             }
 
         } else {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+
+
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, locationListenerGPS);
+
+            //change the time of location updates
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(10000)
+                    .setFastestInterval(5000);
+
+            //restart location updates with the new interval
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, locationListenerGPS);
+
+            //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         }
     }
+
+/*    @Override
+    public void onLocationChanged(Location location) {
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+    }*/
+
 
 
     @Override

@@ -56,7 +56,7 @@ public class Triangulo {
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 0.0f };
+    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 0.5f };
 
     public Triangulo() {
         // initialize vertex byte buffer for shape coordinates

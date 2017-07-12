@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.proyectomoviles.unimaps.MainActivity;
 import com.proyectomoviles.unimaps.R;
 import com.proyectomoviles.unimaps.Sesion;
 
@@ -37,6 +38,7 @@ public class Navigation extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String mParam3;
 
 
     private OnFragmentInteractionListener mListener;
@@ -67,9 +69,12 @@ public class Navigation extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sesion = new Sesion(getActivity().getApplicationContext());
+        //sesion.setUserValues((MainActivity)getActivity().get,datos[1],datos[2]);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString("name");
+            mParam2 = getArguments().getString("lastname");
+            mParam3 = getArguments().getString("email");
+            //sesion.setUserValues(mParam1,mParam2,mParam3);
         }
     }
 
@@ -77,6 +82,7 @@ public class Navigation extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //String name = this.getArguments().getString("message");
         View vista= inflater.inflate(R.layout.navimain, container, false);
 
         setHasOptionsMenu(true);

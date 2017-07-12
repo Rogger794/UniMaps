@@ -37,6 +37,25 @@ public class Sesion {
 
         editor.commit();
     }
+
+    public void setName(String name){
+
+        editor.putString("nameKey", name);
+        editor.commit();
+    }
+
+    public void setLastName(String lname){
+
+        editor.putString("lastnameKey", lname);
+        editor.commit();
+    }
+
+    public void setEmail(String ema){
+
+        editor.putString("correoKey", ema);
+        editor.commit();
+    }
+
     public String[] getUserValues(){
         String[] datos = {  prefs.getString("nameKey",null),
                             prefs.getString("lastnameKey",null),

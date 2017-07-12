@@ -33,7 +33,7 @@
         tools:layout_editor_absoluteX="0dp">
 
 
-        <com.example.moviles.proyectomoviles.MiGLSurfaceView
+        <com.proyectomoviles.unimaps.OpenGL.MiGLSurfaceView
             android:id="@+id/glSurface"
             android:layout_width="match_parent"
             android:layout_height="800px"
