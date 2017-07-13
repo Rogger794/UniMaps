@@ -21,12 +21,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 /*import com.example.moviles.proyectomoviles.AdminSQLite;
-import com.example.moviles.proyectomoviles.Objetos.Dependencia;
-import com.example.moviles.proyectomoviles.Objetos.Empleado;
-import com.example.moviles.proyectomoviles.Objetos.FirebaseReferences;
-import com.example.moviles.proyectomoviles.Objetos.Oficina;
-import com.example.moviles.proyectomoviles.Objetos.Sede;
-import com.example.moviles.proyectomoviles.Objetos.Usuario;
 import com.example.moviles.proyectomoviles.PassValidator;
 import com.example.moviles.proyectomoviles.R;*/
 
@@ -42,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.proyectomoviles.unimaps.Objetos.FirebaseReferences;
+import com.proyectomoviles.unimaps.Objetos.Ubicacion;
 import com.proyectomoviles.unimaps.Objetos.Usuario;
 import com.proyectomoviles.unimaps.R;
 
@@ -67,6 +62,8 @@ public class Register extends Fragment{
     private EditText correo;
     private EditText password;
     private EditText empresa;
+    private EditText sede;
+    private EditText dependencia;
     private EditText oficina;
     private Spinner sexo;
 
@@ -75,6 +72,8 @@ public class Register extends Fragment{
     private String cor;
     private String pas;
     private String emp;
+    private String sed;
+    private String dep;
     private String ofi;
     private String sex;
 
@@ -142,6 +141,8 @@ public class Register extends Fragment{
         apellidos =(EditText)vista.findViewById(R.id.eApellidos);
         correo =(EditText)vista.findViewById(R.id.eCorreo);
         empresa =(EditText)vista.findViewById(R.id.eEmpresa);
+        sede =(EditText)vista.findViewById(R.id.eSede);
+        dependencia =(EditText)vista.findViewById(R.id.eDependencia);
         oficina =(EditText)vista.findViewById(R.id.eOficina);
         password =(EditText)vista.findViewById(R.id.ePassword);
         sexo = (Spinner)vista.findViewById(R.id.spinnerSexo);
@@ -191,6 +192,8 @@ public class Register extends Fragment{
                                 nom = nombres.getText().toString().trim();
                                 ape = apellidos.getText().toString().trim();
                                 emp = empresa.getText().toString().trim();
+                                sed = sede.getText().toString().trim();
+                                dep = dependencia.getText().toString().trim();
                                 ofi = oficina.getText().toString().trim();
                                 sex = sexo.getSelectedItem().toString();
                                 //progressBar.setVisibility(View.GONE);
@@ -255,8 +258,12 @@ public class Register extends Fragment{
     // dentro de users
     //Funcion agregada WriteUser
     private void writeNewUser(String userId, String email){
-        Usuario usuario = new Usuario(nom, ape,email,sex,emp,ofi, getPhoneNumber());
+        String gru="empresas/"+emp+"/sedes/"+sed+"/dependencias/"+dep+"/oficinas/"+ofi+"/grupo";
+        Usuario usuario = new Usuario(nom, ape,email,sex,emp,sed, dep,ofi, getPhoneNumber(),gru);
+        Ubicacion ubicacion = new Ubicacion(-12.016858,-77.049769,true);
         myRef.child(FirebaseReferences.USUARIO_REFERENCE).child(userId).setValue(usuario);
+        //myRef.child(FirebaseReferences.USUARIO_REFERENCE+"/"+userId).child(FirebaseReferences.UBICACION_REFERENCE).setValue(ubicacion);
+        myRef.child(gru+"/"+userId).setValue(ubicacion);
     }
 
     //Funcion Agregada

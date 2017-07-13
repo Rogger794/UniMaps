@@ -16,12 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nombres"
-            android:layout_marginEnd="25dp"
-            app:layout_constraintRight_toLeftOf="@+id/eNombres"
             tools:layout_constraintRight_creator="1"
+            app:layout_constraintRight_toRightOf="@+id/tApellidos"
             app:layout_constraintBaseline_toBaselineOf="@+id/eNombres"
             tools:layout_constraintBaseline_creator="1"
-            android:layout_marginRight="26dp" />
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="@+id/tApellidos" />
 
         <TextView
             android:id="@+id/tApellidos"
@@ -30,22 +30,21 @@
             android:text="@string/apellidos"
             android:layout_marginEnd="26dp"
             app:layout_constraintRight_toLeftOf="@+id/eApellidos"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            app:layout_constraintBaseline_toBaselineOf="@+id/eApellidos"
-            tools:layout_constraintBaseline_creator="1"
-            android:layout_marginRight="31dp" />
+            android:layout_marginTop="33dp"
+            app:layout_constraintTop_toBottomOf="@+id/tNombres" />
 
         <TextView
             android:id="@+id/tCorreo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/correo"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="26dp"
             app:layout_constraintRight_toLeftOf="@+id/eCorreo"
             tools:layout_constraintRight_creator="1"
             app:layout_constraintBaseline_toBaselineOf="@+id/eCorreo"
-            tools:layout_constraintBaseline_creator="1"
-            android:layout_marginRight="24dp" />
+            tools:layout_constraintBaseline_creator="1" />
 
         <TextView
             android:id="@+id/tSexo"
@@ -55,33 +54,30 @@
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintBottom_creator="1"
             app:layout_constraintBottom_toBottomOf="@+id/spinnerSexo"
-            app:layout_constraintRight_toRightOf="@+id/tEmpresa"
-            android:layout_marginRight="-1dp"
-            android:layout_marginBottom="10dp" />
+            app:layout_constraintRight_toRightOf="@+id/tEmpresa" />
 
         <TextView
             android:id="@+id/tEmpresa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Empresa"
+            android:layout_marginEnd="26dp"
             app:layout_constraintRight_toLeftOf="@+id/eEmpresa"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            android:layout_marginEnd="25dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/eEmpresa"
-            tools:layout_constraintBaseline_creator="1"
-            android:layout_marginRight="27dp" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/eEmpresa" />
 
         <TextView
             android:id="@+id/tOficina"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Oficina"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintRight_toLeftOf="@+id/eOficina"
+            android:layout_marginEnd="5dp"
             tools:layout_constraintRight_creator="1"
+            app:layout_constraintRight_toRightOf="@+id/tContrasenia"
             app:layout_constraintBaseline_toBaselineOf="@+id/eOficina"
-            tools:layout_constraintBaseline_creator="1"
-            android:layout_marginRight="38dp" />
+            tools:layout_constraintBaseline_creator="1" />
 
         <TextView
             android:id="@+id/tContrasenia"
@@ -90,11 +86,32 @@
             android:text="Contrasenia"
             android:layout_marginEnd="26dp"
             app:layout_constraintRight_toLeftOf="@+id/ePassword"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toBottomOf="@+id/ePassword"
-            android:layout_marginBottom="18dp"
-            android:layout_marginRight="26dp" />
+            android:layout_marginTop="9dp"
+            app:layout_constraintTop_toTopOf="@+id/ePassword" />
+
+        <TextView
+            android:id="@+id/tSede"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sede"
+            android:layout_marginEnd="26dp"
+            app:layout_constraintRight_toLeftOf="@+id/eSede"
+            tools:layout_constraintRight_creator="1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/eSede"
+            tools:layout_constraintBaseline_creator="1" />
+
+        <TextView
+            android:id="@+id/tDependencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dependencia"
+            android:layout_marginEnd="26dp"
+            app:layout_constraintRight_toLeftOf="@+id/eDependencia"
+            tools:layout_constraintRight_creator="1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/eDependencia"
+            tools:layout_constraintBaseline_creator="1" />
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
@@ -112,13 +129,13 @@
             android:ems="10"
             android:hint="Escriba sus nombres"
             android:inputType="textPersonName"
-            android:layout_marginEnd="16dp"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/eApellidos"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="16dp" />
+            app:layout_constraintRight_toRightOf="@+id/eApellidos"
+            android:layout_marginTop="51dp"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="@+id/eApellidos"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/eApellidos"
@@ -127,14 +144,13 @@
             android:ems="10"
             android:hint="Escriba sus apellidos"
             android:inputType="textPersonName"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/eCorreo"
-            app:layout_constraintRight_toRightOf="@+id/eNombres"
+            app:layout_constraintRight_toRightOf="@+id/eCorreo"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/eNombres"
             tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="9dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eNombres"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintLeft_toLeftOf="@+id/eCorreo" />
 
         <EditText
             android:id="@+id/eCorreo"
@@ -142,14 +158,13 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textEmailAddress"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/eEmpresa"
-            app:layout_constraintRight_toRightOf="@+id/eApellidos"
+            app:layout_constraintRight_toRightOf="@+id/eEmpresa"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/eApellidos"
             tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="59dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eApellidos"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintLeft_toLeftOf="@+id/eEmpresa" />
 
         <EditText
             android:id="@+id/eEmpresa"
@@ -157,14 +172,41 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textMultiLine"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/eOficina"
-            app:layout_constraintRight_toRightOf="@+id/eCorreo"
+            app:layout_constraintRight_toRightOf="@+id/eSede"
+            android:layout_marginTop="55dp"
+            app:layout_constraintTop_toBottomOf="@+id/eCorreo"
             tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="17dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eCorreo"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintLeft_toLeftOf="@+id/eSede" />
+
+        <EditText
+            android:id="@+id/eSede"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            app:layout_constraintRight_toRightOf="@+id/eDependencia"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/eEmpresa"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="@+id/eDependencia" />
+
+        <EditText
+            android:id="@+id/eDependencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            app:layout_constraintRight_toRightOf="@+id/eOficina"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/eSede"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="@+id/eOficina" />
 
         <EditText
             android:id="@+id/ePassword"
@@ -172,14 +214,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="@+id/eOficina"
-            tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="125dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eOficina"
-            app:layout_constraintHorizontal_bias="0.0" />
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@+id/eOficina" />
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
@@ -194,26 +234,24 @@
             android:id="@+id/spinnerSexo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/eEmpresa"
+            tools:layout_constraintTop_creator="1"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/eCorreo"
             tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eEmpresa"
-            android:layout_marginLeft="12dp" />
+            app:layout_constraintLeft_toLeftOf="@+id/eCorreo" />
 
         <EditText
             android:id="@+id/eOficina"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
-            app:layout_constraintBottom_toTopOf="@+id/ePassword"
-            app:layout_constraintRight_toRightOf="@+id/eEmpresa"
+            app:layout_constraintRight_toRightOf="@+id/ePassword"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@+id/eDependencia"
             tools:layout_constraintLeft_creator="1"
-            android:layout_marginBottom="14dp"
-            app:layout_constraintLeft_toLeftOf="@+id/eEmpresa"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintLeft_toLeftOf="@+id/ePassword" />
 
         <Button
             android:id="@+id/bRegister"
@@ -222,11 +260,10 @@
             android:text="@string/registro"
             android:layout_marginStart="21dp"
             tools:layout_constraintTop_creator="1"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="11dp"
             app:layout_constraintTop_toBottomOf="@+id/ePassword"
             tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toRightOf="@+id/tContrasenia"
-            android:layout_marginLeft="21dp" />
+            app:layout_constraintLeft_toRightOf="@+id/tContrasenia" />
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"

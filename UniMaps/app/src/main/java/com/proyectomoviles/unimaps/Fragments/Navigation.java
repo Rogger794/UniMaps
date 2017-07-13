@@ -192,8 +192,8 @@ public class Navigation extends Fragment {
         TextView correo=(TextView)hView.findViewById(R.id.Correo0);
         String[] datostmp;
         datostmp=sesion.getUserValues();
-        usuario.setText(datostmp[0]+" "+datostmp[1]);
-        correo.setText(datostmp[2]);
+        usuario.setText(datostmp[1]+" "+datostmp[2]);
+        correo.setText(datostmp[3]);
     }
 
 

@@ -5,28 +5,18 @@ package com.proyectomoviles.unimaps.Objetos;
  */
 
 public class Ubicacion {
-    int idUbicacion;
-    String nombreUbicacion;
     double latitud;
     double longitud;
+    boolean conectado;
 
     public Ubicacion(){
 
     }
 
-    public Ubicacion(int idUbicacion, String nombreUbicacion, double latitud, double longitud) {
-        this.idUbicacion = idUbicacion;
-        this.nombreUbicacion = nombreUbicacion;
+    public Ubicacion(double latitud, double longitud, boolean conectado) {
         this.latitud = latitud;
         this.longitud = longitud;
-    }
-
-    public int getIdUbicacion() {
-        return idUbicacion;
-    }
-
-    public String getNombreUbicacion() {
-        return nombreUbicacion;
+        this.conectado = conectado;
     }
 
     public double getLatitud() {
@@ -35,5 +25,9 @@ public class Ubicacion {
 
     public double getLongitud() {
         return longitud;
+    }
+
+    public boolean getConectado() {
+        return conectado;
     }
 }

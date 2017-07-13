@@ -3,6 +3,7 @@ package com.proyectomoviles.unimaps.Fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -23,8 +24,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.proyectomoviles.unimaps.Objetos.FirebaseReferences;
+import com.proyectomoviles.unimaps.Objetos.Ubicacion;
 import com.proyectomoviles.unimaps.R;
-//import com.example.moviles.proyectomoviles.*;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,7 +42,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-//import android.support.v4.app.FragmentActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.proyectomoviles.unimaps.Sesion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickListener, AdapterView.OnItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -58,6 +72,8 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
     private static final LatLng ESTADISTICA = new LatLng(-12.0172362, -77.0505866);
     private static final LatLng BC = new LatLng(-12.0180023, -77.0492364);
 
+    private Sesion sesion;
+    private long puntos=1;
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -65,12 +81,20 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
     private LocationRequest mLocationRequest;
     //private LocationListener mlocListener;
 
+    private DatabaseReference myUser;
+    private DatabaseReference myGroup;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
+    private ChildEventListener mChildEventListener;
+
+    private List<String> mUbicacionesIds = new ArrayList<>();
+    private List<Ubicacion> mUbicaciones = new ArrayList<>();
+    private List<Circle> mCircles = new ArrayList<>();
+    private Circle circle;
 
     LocationListener locationListenerGPS=new LocationListener() {
         @Override
@@ -79,14 +103,26 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
             double longitude=location.getLongitude();
             //String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
 
+            Log.d(TAG, "localizacion: " + latitude+" "+longitude);
             if (location != null) {
-                mLatitudeText.setText("Latitud: " + String.valueOf(latitude));
-                mLongitudeText.setText("Longitud: " + String.valueOf(longitude));
+                myGroup.child(sesion.getId()+"/latitud").setValue(latitude);
+                myGroup.child(sesion.getId()+"/longitud").setValue(longitude);
+                mLatitudeText.setText("Latitud: " + latitude);
+                mLongitudeText.setText("Longitud: " + longitude);
+                if(mCircles.size()>0){
+                    for(int j=0;j<mCircles.size();j++){
+                        mCircles.get(j).setCenter(new LatLng(mUbicaciones.get(j).getLatitud(),mUbicaciones.get(j).getLongitud()));
+                        mCircles.get(j).setVisible(true);
+                    }
+                }
+                //circle.setCenter(new LatLng(latitude, longitude));
             } else {
                 mLatitudeText.setText("Latitud: (desconocida)");
                 mLongitudeText.setText("Longitud: (desconocida)");
             }
 
+
+            //mMap.addMarker(new MarkerOptions().position(CTIC/*Float.parseFloat(R.string.lat_ctic)*/).title("CTIC").icon(BitmapDescriptorFactory.fromResource(R.drawable.minilogo)));
             //Toast.makeText(getActivity().getApplicationContext(),msg,Toast.LENGTH_LONG).show();
         }
     };
@@ -113,6 +149,161 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
         buildGoogleApiClient();
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
+        sesion = new Sesion(getActivity().getApplicationContext());
+        myUser = FirebaseDatabase.getInstance().getReference(FirebaseReferences.BD_REFERENCE+"/"+FirebaseReferences.USUARIO_REFERENCE+"/"+sesion.getId());//agregado
+
+        //myGroup = FirebaseDatabase.getInstance().getReference(FirebaseReferences.BD_REFERENCE+"/"+sesion.getGrupo()+"/"+sesion.getId());//agregado
+
+        myGroup = FirebaseDatabase.getInstance().getReference(FirebaseReferences.BD_REFERENCE+"/"+sesion.getGrupo());//agregado
+
+        myUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //datos[0] = dataSnapshot.getValue(String.class);
+                //String myMessage = "Stackoverflow is cool!";
+                //mbundle.putString("name", dataSnapshot.getValue(String.class) );
+                //sesion.setName(dataSnapshot.getValue(String.class));
+
+
+                //profileName.setText(username);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Toast.makeText(getApplicationContext(),"The read failed: " + databaseError.getCode(),Toast.LENGTH_SHORT).show();
+                //System.out.println();
+            }
+        });
+
+
+
+        /*lastname.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //datos[1] = dataSnapshot.getValue(String.class);
+                //mbundle.putString("lastname", dataSnapshot.getValue(String.class) );
+                //sesion.setLastName(dataSnapshot.getValue(String.class));
+
+                //TextView profileName = (TextView) v.findViewById(R.id.profileName);
+                //profileName.setText(username);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });*/
+
+        //sesion.setEmail(user.getEmail());
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
+
+                // A new comentarios has been added, add it to the displayed list
+                Ubicacion ubicacion = dataSnapshot.getValue(Ubicacion.class);
+
+                // [START_EXCLUDE]
+                // Update RecyclerView
+                mUbicacionesIds.add(dataSnapshot.getKey());
+                mUbicaciones.add(ubicacion);
+
+                puntos=mUbicaciones.size();
+                /*if(ubicacion!=null) {
+                    /*Circle cir = mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud()))
+                            .radius(5)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.BLUE));*//*
+                    mCircles.add(mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud()))
+                            .radius(5)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.BLUE)));
+                }*/
+                Log.d(TAG, "tam:" + puntos);
+                //notifyItemInserted(mUbicaciones.size() - 1);
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so displayed the changed comment.
+                Ubicacion newUbicacion = dataSnapshot.getValue(Ubicacion.class);
+                /*Circle cir = mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(newUbicacion.getLatitud(),newUbicacion.getLongitud()))
+                        .radius(5)
+                        .strokeColor(Color.RED)
+                        .fillColor(Color.BLUE));*/
+
+                String Key = dataSnapshot.getKey();
+
+                // [START_EXCLUDE]
+                int commentIndex = mUbicacionesIds.indexOf(Key);
+                if (commentIndex > -1) {
+                    // Replace with the new data
+                    mUbicaciones.set(commentIndex, newUbicacion);
+                    //mCircles.get(commentIndex).setCenter(new LatLng(newUbicacion.getLatitud(),newUbicacion.getLongitud()));
+                    //mCircles.get(commentIndex).remove();
+                    //mCircles.set(commentIndex, cir);
+
+                    // Update the RecyclerView
+                    //notifyItemChanged(commentIndex);
+                } else {
+                    Log.w(TAG, "onChildChanged:unknown_child:" + Key);
+                }
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so remove it.
+                String commentKey = dataSnapshot.getKey();
+
+                // [START_EXCLUDE]
+                int commentIndex = mUbicacionesIds.indexOf(commentKey);
+                if (commentIndex > -1) {
+                    // Remove data from the list
+                    mUbicacionesIds.remove(commentIndex);
+                    mUbicaciones.remove(commentIndex);
+                    //mCircles.get(commentIndex).remove();
+                    //mCircles.remove(commentIndex);
+                    puntos=mUbicaciones.size();
+
+                    // Update the RecyclerView
+                    //notifyItemRemoved(commentIndex);
+                } else {
+                    Log.w(TAG, "onChildRemoved:unknown_child:" + commentKey);
+                }
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+
+                // A comment has changed position, use the key to determine if we are
+                // displaying this comment and if so move it.
+                //Comentarios movedComentarios = dataSnapshot.getValue(Comentarios.class);
+                //String commentKey = dataSnapshot.getKey();
+
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+                //Toast.makeText(mContext, "Failed to load comments.",
+                //        Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        myGroup.addChildEventListener(mChildEventListener);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -143,13 +334,15 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.addMarker(new MarkerOptions().position(CTIC/*Float.parseFloat(R.string.lat_ctic)*/).title("CTIC").icon(BitmapDescriptorFactory.fromResource(R.drawable.minilogo)));
+        //mMap.addMarker(new MarkerOptions().position(CTIC/*Float.parseFloat(R.string.lat_ctic)*/).title("CTIC").icon(BitmapDescriptorFactory.fromResource(R.drawable.minilogo)));
         mMap.addMarker(new MarkerOptions().position(BIBLIOTECAFC).title("Biblioteca FC").icon(BitmapDescriptorFactory.fromResource(R.drawable.minilibro)));
         mMap.addMarker(new MarkerOptions().position(BC).title("Biblioteca Central").icon(BitmapDescriptorFactory.fromResource(R.drawable.minilibro)));
-        mMap.addMarker(new MarkerOptions().position(TIA_GRASA).title("Snack ciencias").icon(BitmapDescriptorFactory.fromResource(R.drawable.minicocina)));
-        mMap.addMarker(new MarkerOptions().position(ESTADISTICA).title("Oficina de estadistica"));
+        //mMap.addMarker(new MarkerOptions().position(TIA_GRASA).title("Snack ciencias").icon(BitmapDescriptorFactory.fromResource(R.drawable.minicocina)));
+        //mMap.addMarker(new MarkerOptions().position(ESTADISTICA).title("Oficina de estadistica"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(CTIC));
         permiso(mMap);
+
+        crearPuntos();
 
     }
 
@@ -218,6 +411,23 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
 
     }
 
+    private void crearPuntos(){
+        for(int i=0;i<puntos;i++){
+            /*Circle cir = mMap.addCircle(new CircleOptions()
+                    .center(new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud()))
+                    .radius(5)
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.BLUE));*/
+            mCircles.add(mMap.addCircle(new CircleOptions()
+                    .center(new LatLng(-15.0, -75.0))
+                    .radius(5)
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.BLUE)
+                    .visible(false)));
+            Log.d(TAG, i+" Creado");
+        }
+    }
+
     private void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
                 .addConnectionCallbacks(this)
@@ -239,6 +449,13 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+        /*if (mPostListener != null) {
+            mPostReference.removeEventListener(mPostListener);
+        }*/
+        if (mChildEventListener != null) {
+            myGroup.removeEventListener(mChildEventListener);
+        }
+
     }
 
 
@@ -262,8 +479,8 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
             //change the time of location updates
             mLocationRequest = LocationRequest.create()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(10000)
-                    .setFastestInterval(5000);
+                    .setInterval(1000)
+                    .setFastestInterval(500);
 
             //restart location updates with the new interval
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, locationListenerGPS);
@@ -296,7 +513,7 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
         }
     }
 
-    private void Revisar_Permisos() {
+    /*private void Revisar_Permisos() {
 
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -321,7 +538,7 @@ public class Mapa extends Fragment implements OnMapReadyCallback, View.OnClickLi
             //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         }
-    }
+    }*/
 
 /*    @Override
     public void onLocationChanged(Location location) {

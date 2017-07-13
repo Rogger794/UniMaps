@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String[] datos=new String[3];
     private Bundle mbundle;
+    private Usuario usu;
 
     public String[] getDatos() {
         return datos;
@@ -81,17 +82,22 @@ public class MainActivity extends AppCompatActivity implements
                     else{
                         //DatabaseReference usuario = myRef.child(user.getUid());
 
-                        DatabaseReference name = myRef.child(user.getUid()).child("nombres");
-                        DatabaseReference lastname = myRef.child(user.getUid()).child("apellidos");
+                        DatabaseReference name = myRef.child(user.getUid());//.child("nombres");
+                        //DatabaseReference lastname = myRef.child(user.getUid()).child("apellidos");
 
+                        sesion.setId(user.getUid());
                         name.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 //datos[0] = dataSnapshot.getValue(String.class);
                                 //String myMessage = "Stackoverflow is cool!";
                                 //mbundle.putString("name", dataSnapshot.getValue(String.class) );
-                                sesion.setName(dataSnapshot.getValue(String.class));
+                                usu=dataSnapshot.getValue(Usuario.class);
+                                sesion.setName(usu.getNombres());
+                                sesion.setLastName(usu.getApellidos());
+                                sesion.setGrupo(usu.getGrupo());
 
+                                Toast.makeText(getApplicationContext(),usu.getNombres() ,Toast.LENGTH_SHORT).show();
 
                                 //profileName.setText(username);
                             }
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
                             }
                         });
 
-                        lastname.addValueEventListener(new ValueEventListener() {
+                        /*lastname.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 //datos[1] = dataSnapshot.getValue(String.class);
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements
                             public void onCancelled(DatabaseError databaseError) {
                                 //System.out.println("The read failed: " + databaseError.getCode());
                             }
-                        });
+                        });*/
 
                         sesion.setEmail(user.getEmail());
                         //mbundle.putString("email",user.getEmail() );
